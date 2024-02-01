@@ -1,0 +1,17 @@
+:root
+{
+    --backgroundColor: #ffffff;
+    --primaryColor: #ffffff;
+    --secondaryColor: #ffffff;
+    --tertiaryColor: #ffffff;
+}
+
+body
+{
+    background-color: var(--backgroundColor);
+}
+
+.box
+{
+    background-color: var(--primaryColor);
+}
