@@ -69,22 +69,22 @@ async function PageStart()
         }
     }); 
 
-    var table = document.getElementById("gameTable");
+    let table = document.getElementById("gameTable");
 
     const urlParams = new URLSearchParams(window.location.search);
     const search = urlParams.get('search');
 
-    var request = 'http://localhost:8080/search';
+    let request = 'http://localhost:8080/search';
 
     if(search !== null)
     {
         request += '/' + search;
     }
 
-    var results = await fetch(request, requestOptions);
-    var games = await results.json();
+    let results = await fetch(request, requestOptions);
+    let games = await results.json();
 
-    var row = null;
+    let row = null;
 
     let rowcount = 0;
 
