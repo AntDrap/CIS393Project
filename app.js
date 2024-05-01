@@ -10,14 +10,14 @@ const con = mysql.createConnection
     database:'bradleygamearchive'
 });
 
-app.listen(portNumber, function () {
-    console.log(`App listening on port: ${portNumber}`);
-});
-
 const app = express();
 
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
+
+app.listen(portNumber, function () {
+    console.log(`App listening on port: ${portNumber}`);
+});
 
 // Defines the search command
 app.get("/search/:query", function(req, res){
@@ -100,26 +100,16 @@ app.get("/read/:id", function(req, res){
 
 // Defines an action that updates a game 
 app.post("/update/:id", function(req, res){
-    const gameEntry = 
-    {
-        game_ID: req.params.id,
-        game_name: req.body.game_name, 
-        game_release: req.body.game_release, 
-        game_link: req.body.game_link, 
-        game_videoID: youtube_parser(req.body.game_videoID), 
-        game_description: req.body.game_description,
-        game_contributors: req.body.game_contributors
-    }
+    var q = "UPDATE game SET "
+    q += "game_ID = '" +  req.body.game_name + "', ";
+    q += "game_release = '" +  req.body.game_release + "', ";
+    q += "game_link = '" +  req.body.game_link + "', ";
+    q += "game_videoID = '" +  req.body.game_videoID + "', ";
+    q += "game_description = '" +  req.body.game_description + "', ";
+    q += "game_contributors = '" +  req.body.game_contributors + "' ";
+    q += "WHERE game_ID = '" + req.params.id + "' ";
 
-    var q = "DELETE FROM game WHERE game_ID = ?"
-
-    con.query(q, req.params.id, (err, results) => {
-        if(err) throw err
-    })
-
-    q = "INSERT INTO game SET ?"
-
-    con.query(q, gameEntry, (err, results) => {
+    con.query(q, (err, results) => {
         if(err) throw err
         else
         {
