@@ -2,6 +2,7 @@ const express = require('express');
 const portNumber = 8080;
 const mysql = require('mysql');
 
+// Establishes the connection to the database
 const con = mysql.createConnection
 ({
     host:'localhost',
@@ -9,14 +10,19 @@ const con = mysql.createConnection
     database:'bradleygamearchive'
 });
 
-exports.con = con;
+app.listen(portNumber, function () {
+    console.log(`App listening on port: ${portNumber}`);
+});
 
 const app = express();
 
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
 
+// Defines the search command
 app.get("/search/:query", function(req, res){
+
+    // Assembles the search query based on the fields and search parameters
     var q = "SELECT * FROM game WHERE ";
 
     const fields = [
@@ -50,6 +56,7 @@ app.get("/search/:query", function(req, res){
     })
 });
 
+// Defines the full database search that returns all games
 app.get("/search", function(req, res){
     const q = "SELECT * FROM game"
 
@@ -59,6 +66,7 @@ app.get("/search", function(req, res){
     })
 });
 
+// Defines the create action that inserts a new game based on the form
 app.post("/create", function(req, res){
     const gameEntry = 
     {
@@ -81,6 +89,7 @@ app.post("/create", function(req, res){
     })
 }); 
 
+// Defines an action that returns the game with the specified ID
 app.get("/read/:id", function(req, res){
     const q = "SELECT * FROM game WHERE game_ID = ?"
     con.query(q, req.params.id, (err, results) => {
@@ -89,6 +98,7 @@ app.get("/read/:id", function(req, res){
     })
 });
 
+// Defines an action that updates a game 
 app.post("/update/:id", function(req, res){
     const gameEntry = 
     {
@@ -118,6 +128,7 @@ app.post("/update/:id", function(req, res){
     })
 }); 
 
+// Defines an action that deletes a game
 app.post("/delete/:id", function(req, res){
     var q = "DELETE FROM game WHERE game_ID = ?"
 
@@ -126,10 +137,7 @@ app.post("/delete/:id", function(req, res){
     })
 }); 
 
-app.listen(portNumber, function () {
-    console.log(`App listening on port: ${portNumber}`);
-});
-
+// Parses a youtube link and extracts the video id
 function youtube_parser(url){
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     var match = url.match(regExp);
